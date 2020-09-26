@@ -2,14 +2,8 @@ const Products = require('./productModel');
 const AppError = require('../error/appError');
 
 const updateProduct = async (req, res, next) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return next(new AppError('Please provide the ID', 401));
-  }
-
   try {
-    const product = await Products.findByIdAndUpdate(id, req.body, {
+    const product = await Products.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
@@ -31,14 +25,8 @@ const updateProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return next(new AppError('Please provide the ID', 401));
-  }
-
   try {
-    const product = await Products.findByIdAndDelete(id, {
+    const product = await Products.findByIdAndDelete(req.params.id, {
       useFindAndModify: false,
     });
 
@@ -57,10 +45,6 @@ const deleteProduct = async (req, res, next) => {
 
 const createProduct = async (req, res, next) => {
   try {
-    if (!req.body) {
-      return next(new AppError('Please provide a product', 401));
-    }
-
     const product = await Products.create(req.body);
 
     res.status(200).json({
@@ -75,14 +59,8 @@ const createProduct = async (req, res, next) => {
 };
 
 const getProduct = async (req, res, next) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return next(new AppError('Please provide the ID', 401));
-  }
-
   try {
-    const product = await Products.findById(id);
+    const product = await Products.findById(req.params.id);
 
     if (!product) {
       return next(new AppError('No product found with that id', 401));
