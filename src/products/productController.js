@@ -1,6 +1,35 @@
 const Products = require('./productModel');
 const AppError = require('../error/appError');
 
+const updateProduct = async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('Please provide the ID', 401));
+  }
+
+  try {
+    const product = await Products.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    if (!product) {
+      return next(new AppError('No product found with that ID', 401));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        product,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteProduct = async (req, res, next) => {
   const { id } = req.params;
 
@@ -9,7 +38,9 @@ const deleteProduct = async (req, res, next) => {
   }
 
   try {
-    const product = await Products.findByIdAndDelete(id);
+    const product = await Products.findByIdAndDelete(id, {
+      useFindAndModify: false,
+    });
 
     if (!product) {
       return next(new AppError('No product found with that ID', 401));
@@ -88,4 +119,5 @@ module.exports = {
   getProduct,
   createProduct,
   deleteProduct,
+  updateProduct,
 };
