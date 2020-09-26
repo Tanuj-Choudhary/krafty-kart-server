@@ -1,6 +1,29 @@
 const Products = require('./productModel');
 const AppError = require('../error/appError');
 
+const deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('Please provide the ID', 401));
+  }
+
+  try {
+    const product = await Products.findByIdAndDelete(id);
+
+    if (!product) {
+      return next(new AppError('No product found with that ID', 401));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createProduct = async (req, res, next) => {
   try {
     if (!req.body) {
@@ -64,4 +87,5 @@ module.exports = {
   getAllProducts,
   getProduct,
   createProduct,
+  deleteProduct,
 };
