@@ -1,5 +1,10 @@
+const AppError = require('./appError');
+
+// Send Production Error
 const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
+  const statusCode = err.statusCode || 400;
+
+  res.status(statusCode).json({
     status: err.status,
     err: err,
     message: err.message,
@@ -7,12 +12,13 @@ const sendErrorDev = (err, res) => {
   });
 };
 
+// Send Development Error
 const sendErrorProd = (err, res) => {
   // Trusted Error send error message
   if (err.isOperational) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       status: err.status,
-      err: err,
+      message: err.message,
     });
   }
 
@@ -25,13 +31,20 @@ const sendErrorProd = (err, res) => {
 
   console.log(err);
 
-  res.status(500).json({
+  return res.status(500).json({
     status: 'Fail',
     message: 'Something went wrong',
   });
 };
 
+// Handle DB Cast Error
+const handleDBCastError = (err) => {
+  const message = `Invalid ID provided. ${err.value}`;
+  return new AppError(message, 401);
+};
+
 module.exports = {
   sendErrorDev,
   sendErrorProd,
+  handleDBCastError,
 };
