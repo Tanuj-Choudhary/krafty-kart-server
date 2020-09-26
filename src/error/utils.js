@@ -43,8 +43,23 @@ const handleDBCastError = (err) => {
   return new AppError(message, 401);
 };
 
+// Handle DB ValidatorError
+const handleDBValidationError = (err) => {
+  const { message } = err;
+  return new AppError(message, 401);
+};
+
+// Handle DB duplicate key error
+const handleDBMongoError = (err) => {
+  const duplicateValues = Object.keys(err.keyValue);
+  const message = `${duplicateValues} should be unique. Please provide a different value`;
+  return new AppError(message, 401);
+};
+
 module.exports = {
   sendErrorDev,
   sendErrorProd,
   handleDBCastError,
+  handleDBValidationError,
+  handleDBMongoError,
 };
