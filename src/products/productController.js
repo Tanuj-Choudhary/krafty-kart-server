@@ -1,6 +1,25 @@
 const Products = require('./productModel');
 const AppError = require('../error/appError');
 
+const createProduct = async (req, res, next) => {
+  try {
+    if (!req.body) {
+      return next(new AppError('Please provide a product', 401));
+    }
+
+    const product = await Products.create(req.body);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        product,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getProduct = async (req, res, next) => {
   const { id } = req.params;
 
@@ -44,4 +63,5 @@ const getAllProducts = async (req, res, next) => {
 module.exports = {
   getAllProducts,
   getProduct,
+  createProduct,
 };
