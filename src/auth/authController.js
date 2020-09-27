@@ -1,3 +1,4 @@
+const AppError = require('../error/appError');
 const User = require('../users/usersModel');
 
 const signup = async (req, res, next) => {
@@ -28,6 +29,34 @@ const signup = async (req, res, next) => {
   }
 };
 
+const login = async (req, res, next) => {
+  if (!req.body.email || !req.body.password) {
+    return next(new AppError('Please provide email and password', 401));
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email: email }).select('+password');
+
+    if (!user || !(await user.comparePassword(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    const token = await user.generateJWT(user._id);
+
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   signup,
+  login,
 };
