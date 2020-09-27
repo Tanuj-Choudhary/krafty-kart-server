@@ -1,6 +1,7 @@
 // Third Party Imports
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -51,6 +52,19 @@ userSchema.pre('save', async function (next) {
 
   next();
 });
+
+userSchema.methods.comparePassword = async function (
+  inputPassword,
+  correctPassword
+) {
+  return await bcrypt.compare(inputPassword, correctPassword);
+};
+
+userSchema.methods.generateJWT = async function (id) {
+  return await jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
 
 const User = mongoose.model('User', userSchema);
 
