@@ -1,4 +1,6 @@
+// Third Party Imports
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -17,6 +19,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'password is required'],
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -24,6 +27,11 @@ const userSchema = new mongoose.Schema({
     validate: function validator(v) {
       return this.password === v;
     },
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
   },
   address: String,
   pincode: String,
