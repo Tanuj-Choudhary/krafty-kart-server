@@ -3,20 +3,20 @@ const APIFeatures = require('./apiFeatures');
 
 const updateOne = (Model) => async (req, res, next) => {
   try {
-    const product = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
     });
 
-    if (!product) {
-      return next(new AppError('No product found with that ID', 401));
+    if (!doc) {
+      return next(new AppError('No doc found with that ID', 401));
     }
 
     res.status(200).json({
       status: 'success',
       data: {
-        product,
+        data: doc,
       },
     });
   } catch (error) {
@@ -26,12 +26,12 @@ const updateOne = (Model) => async (req, res, next) => {
 
 const deleteOne = (Model) => async (req, res, next) => {
   try {
-    const product = await Model.findByIdAndDelete(req.params.id, {
+    const doc = await Model.findByIdAndDelete(req.params.id, {
       useFindAndModify: false,
     });
 
-    if (!product) {
-      return next(new AppError('No product found with that ID', 401));
+    if (!doc) {
+      return next(new AppError('No doc found with that ID', 401));
     }
 
     res.status(200).json({
@@ -45,12 +45,12 @@ const deleteOne = (Model) => async (req, res, next) => {
 
 const createOne = (Model) => async (req, res, next) => {
   try {
-    const product = await Model.create(req.body);
+    const doc = await Model.create(req.body);
 
     res.status(200).json({
       status: 'success',
       data: {
-        product,
+        data: doc,
       },
     });
   } catch (error) {
@@ -60,16 +60,16 @@ const createOne = (Model) => async (req, res, next) => {
 
 const getOne = (Model) => async (req, res, next) => {
   try {
-    const product = await Model.findById(req.params.id);
+    const doc = await Model.findById(req.params.id);
 
-    if (!product) {
-      return next(new AppError('No product found with that id', 401));
+    if (!doc) {
+      return next(new AppError('No doc found with that id', 401));
     }
 
     res.status(200).json({
       status: 'success',
       data: {
-        product,
+        data: doc,
       },
     });
   } catch (err) {
@@ -82,12 +82,12 @@ const getAll = (Model) => async (req, res, next) => {
     const features = new APIFeatures(Model.find(), req.query);
     features.filter().sort().limitFields().paginate();
 
-    const products = await features.query;
+    const doc = await features.query;
 
     res.status(200).json({
       status: 'success',
       data: {
-        products,
+        data: doc,
       },
     });
   } catch (err) {
