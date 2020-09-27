@@ -25,7 +25,7 @@ mongoose
 
 // Read JSON file
 const products = JSON.parse(
-  fs.readFileSync(`${__dirname}/devData.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/products.json`, 'utf-8')
 );
 
 // Import Data into DB
