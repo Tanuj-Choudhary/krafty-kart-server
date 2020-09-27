@@ -1,4 +1,5 @@
 const AppError = require('../error/appError');
+const APIFeatures = require('./apiFeatures');
 
 const updateOne = (Model) => async (req, res, next) => {
   try {
@@ -78,7 +79,10 @@ const getOne = (Model) => async (req, res, next) => {
 
 const getAll = (Model) => async (req, res, next) => {
   try {
-    const products = await Model.find({});
+    const features = new APIFeatures(Model.find(), req.query);
+    features.filter().sort().limitFields().paginate();
+
+    const products = await features.query;
 
     res.status(200).json({
       status: 'success',
