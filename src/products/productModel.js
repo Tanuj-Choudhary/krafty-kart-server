@@ -11,7 +11,7 @@ const productSchema = mongoose.Schema({
     required: [true, 'Brand name is required'],
   },
   price: {
-    type: String,
+    type: Number,
     required: [true, 'Product price is required'],
   },
   dialShape: {
