@@ -38,6 +38,20 @@ const userSchema = new mongoose.Schema({
   mobileNumber: String,
 });
 
+/**
+ * If password modified
+ * Encrypt the password
+ * Delete the password confirm field
+ */
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  this.passwordConfirm = undefined;
+
+  next();
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
