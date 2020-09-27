@@ -56,10 +56,22 @@ const handleDBMongoError = (err) => {
   return new AppError(message, 401);
 };
 
+const handleJSONWebTokenError = () => {
+  const message = 'Invalid jwt token. Please send a valid token';
+  return new AppError(message, 401);
+};
+
+const handleJWTTokenExpiredError = () => {
+  const message = 'The JWT token is expired. Please sign in again';
+  return new AppError(message, 401);
+};
+
 module.exports = {
   sendErrorDev,
   sendErrorProd,
   handleDBCastError,
   handleDBValidationError,
   handleDBMongoError,
+  handleJSONWebTokenError,
+  handleJWTTokenExpiredError,
 };

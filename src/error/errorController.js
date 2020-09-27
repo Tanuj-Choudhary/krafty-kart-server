@@ -4,6 +4,8 @@ const {
   handleDBCastError,
   handleDBValidationError,
   handleDBMongoError,
+  handleJSONWebTokenError,
+  handleJWTTokenExpiredError,
 } = require('./utils');
 
 const errorController = (err, req, res, next) => {
@@ -18,6 +20,9 @@ const errorController = (err, req, res, next) => {
     // Handle specific production errors
     if (error.name === 'CastError') error = handleDBCastError(error);
     if (error.name === 'MongoError') error = handleDBMongoError(error);
+    if (error.name === 'JsonWebTokenError') error = handleJSONWebTokenError();
+    if (error.name === 'TokenExpiredError')
+      error = handleJWTTokenExpiredError();
     if (error.name === 'ValidationError')
       error = handleDBValidationError(error);
 
