@@ -1,5 +1,13 @@
+// Third Party Imports
+const jwt = require('jsonwebtoken');
+
+// Project Imports
 const AppError = require('../error/appError');
 const User = require('../users/usersModel');
+
+async function verifyJWT(token) {
+  return await jwt.verify(token, process.env.JWT_SECRET_KEY);
+}
 
 const signup = async (req, res, next) => {
   try {
@@ -56,7 +64,42 @@ const login = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Get token
+ * Verify it
+ * Check if user still exist
+ * Attach user to request object
+ */
+const protect = async (req, res, next) => {
+  if (
+    !req.headers.authorization ||
+    !req.headers.authorization.startsWith('Bearer')
+  ) {
+    return next(new AppError('Please send the token', 401));
+  }
+
+  // Bearer 23423 = 23423
+  const token = req.headers.authorization.split(' ')[1];
+
+  try {
+    const decoded = await verifyJWT(token);
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return next(new AppError('The user does not exists', 401));
+    }
+
+    req.user = user;
+  } catch (error) {
+    next(error);
+  }
+  next();
+};
+
 module.exports = {
   signup,
   login,
+  protect,
 };
