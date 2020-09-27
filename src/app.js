@@ -5,7 +5,7 @@ const morgan = require('morgan');
 // Project Imports
 const globalErrorHandler = require('./error/errorController');
 const productRouter = require('./products/productRouter');
-const AppError = require('./error/appError');
+const userRouter = require('./users/userRouter');
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/users', userRouter);
 
 app.use(globalErrorHandler);
 
