@@ -98,8 +98,18 @@ const protect = async (req, res, next) => {
   next();
 };
 
+const isSignedIn = async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: req.user,
+    },
+  });
+};
+
 module.exports = {
   signup,
   login,
   protect,
+  isSignedIn,
 };
