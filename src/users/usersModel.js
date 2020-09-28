@@ -38,8 +38,8 @@ const userSchema = new mongoose.Schema({
   address: String,
   pincode: String,
   mobileNumber: String,
-  passwordResetToken: String,
-  passwordResetExpiry: Date,
+  passwordResetToken: { type: String, select: false },
+  passwordResetExpiry: { type: Date, select: false },
 });
 
 /**
