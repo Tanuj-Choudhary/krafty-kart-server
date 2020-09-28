@@ -72,15 +72,32 @@ userSchema.methods.generateJWT = async function (id) {
 userSchema.methods.generatePasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
-  this.passwordResetToken = resetToken;
-  this.passwordResetExpiry = Date.now() + 10 * 60 * 60 * 1000; // 10 minutes
-
   const encryptedResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
 
-  return encryptedResetToken;
+  this.passwordResetToken = encryptedResetToken;
+  this.passwordResetExpiry = Date.now() + 10 * 60 * 60 * 1000; // 10 minutes
+
+  return resetToken;
+};
+
+userSchema.methods.verifyPasswordResetToken = function (passwordResetToken) {
+  let isTokenValid = true;
+
+  if (
+    this.passwordResetToken !==
+    crypto.createHash('sha256').update(passwordResetToken).digest('hex')
+  ) {
+    isTokenValid = false;
+  }
+
+  if (Date.now() > this.passwordResetExpiry) {
+    isTokenValid = false;
+  }
+
+  return isTokenValid;
 };
 
 const User = mongoose.model('User', userSchema);
