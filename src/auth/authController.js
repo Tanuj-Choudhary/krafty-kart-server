@@ -1,6 +1,5 @@
 // Third Party Imports
 const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
 
 // Project Imports
 const AppError = require('../error/appError');
@@ -124,6 +123,8 @@ const forgotPassword = async (req, res, next) => {
 
     const token = await user.generatePasswordResetToken();
 
+    await user.save({ validateBeforeSave: false });
+
     const message = `The OTP for password reset: ${token}`;
 
     const mailOptions = {
@@ -147,10 +148,54 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+const resetPassword = async (req, res, next) => {
+  const { passwordResetToken, email, password, passwordConfirm } = req.body;
+
+  if (!passwordResetToken || !password || !passwordConfirm || !email) {
+    return next(new AppError('Please provide all details', 401));
+  }
+
+  if (passwordConfirm !== password) {
+    return next(
+      new AppError('Password and password confirm does not match', 401)
+    );
+  }
+
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return next(new AppError('No user exists with that email', 401));
+    }
+
+    if (!user.verifyPasswordResetToken(passwordResetToken)) {
+      return next(new AppError('Password reset token is not valid', 401));
+    }
+
+    user.password = password;
+    user.passwordConfirm = passwordConfirm;
+
+    user.passwordResetToken = undefined;
+    user.passwordResetExpiry = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        message: 'Password reset successfully',
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   login,
   protect,
   isSignedIn,
   forgotPassword,
+  resetPassword,
 };
