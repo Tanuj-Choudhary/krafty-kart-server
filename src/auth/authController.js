@@ -1,9 +1,11 @@
 // Third Party Imports
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 // Project Imports
 const AppError = require('../error/appError');
 const User = require('../users/usersModel');
+const nodeMailer = require('../utils/nodeMailer');
 
 async function verifyJWT(token) {
   return await jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -107,9 +109,48 @@ const isSignedIn = async (req, res, next) => {
   });
 };
 
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError('Please provide email', 401));
+  }
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return next(new AppError('No user exist with that email', 401));
+    }
+
+    const token = await user.generatePasswordResetToken();
+
+    const message = `The OTP for password reset: ${token}`;
+
+    const mailOptions = {
+      from: 'process.env.OAUTH_EMAIL',
+      to: email,
+      subject: 'Reset Password',
+      text: message,
+    };
+
+    nodeMailer.sendMail(mailOptions, (err) => next(err));
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        message:
+          'The password OTP is sent to your email. Please check your inbox',
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   login,
   protect,
   isSignedIn,
+  forgotPassword,
 };
