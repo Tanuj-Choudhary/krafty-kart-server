@@ -134,7 +134,7 @@ const forgotPassword = async (req, res, next) => {
       text: message,
     };
 
-    nodeMailer.sendMail(mailOptions, (err) => next(err));
+    nodeMailer.sendMail(mailOptions, () => {});
 
     res.status(200).json({
       status: 'success',
@@ -162,7 +162,9 @@ const resetPassword = async (req, res, next) => {
   }
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select(
+      '+passwordResetToken +passwordResetExpiry'
+    );
 
     if (!user) {
       return next(new AppError('No user exists with that email', 401));
@@ -191,6 +193,22 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+const restrictTo = (...roles) => (req, res, next) => {
+  let permit = false;
+
+  roles.forEach((el) => {
+    if (req.user.role === el) {
+      permit = true;
+    }
+  });
+
+  if (permit) {
+    return next();
+  }
+
+  next(new AppError('You are not authorized to access', 401));
+};
+
 module.exports = {
   signup,
   login,
@@ -198,4 +216,5 @@ module.exports = {
   isSignedIn,
   forgotPassword,
   resetPassword,
+  restrictTo,
 };
