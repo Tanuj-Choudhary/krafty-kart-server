@@ -14,10 +14,17 @@ const createProduct = createOne(Products);
 const getProduct = getOne(Products);
 const getAllProducts = getAll(Products);
 
+const aliasNewArrivals = (req, res, next) => {
+  // Sort on basis of updated at
+  req.query = { sort: 'updatedAt' };
+  getAllProducts(req, res, next);
+};
+
 module.exports = {
   getAllProducts,
   getProduct,
   createProduct,
   deleteProduct,
   updateProduct,
+  aliasNewArrivals,
 };

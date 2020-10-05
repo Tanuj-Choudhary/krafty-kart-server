@@ -8,9 +8,12 @@ const {
   updateProduct,
   deleteProduct,
   createProduct,
+  aliasNewArrivals,
 } = require('./productController');
 
 const router = express.Router();
+
+router.route('/newarrivals').get(aliasNewArrivals);
 
 router.route('/').get(getAllProducts).post(createProduct);
 
