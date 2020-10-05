@@ -116,7 +116,19 @@
     "sizes": ["S", "XXL"],
     "category": "analog"
   },
-
+  {
+    "name": "Navitimer",
+    "price": 1999,
+    "brand": "BREITLING",
+    "createdAt": "2018-04-09T06:13:25-04:00",
+    "updatedAt": "2020-09-24T18:04:32-04:00",
+    "color": "#D9E4E3",
+    "dialShape": "round",
+    "alt": "hero watch",
+    "url": "https://colorlib.com/preview/theme/timezone/assets/img/hero/watch.png",
+    "sizes": ["S", "M"],
+    "category": "analog"
+  },
   {
     "name": "Piaget SA",
     "price": 145,
