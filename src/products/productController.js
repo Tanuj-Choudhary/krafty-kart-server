@@ -16,7 +16,7 @@ const getAllProducts = getAll(Products);
 
 const aliasNewArrivals = (req, res, next) => {
   // Sort on basis of updated at
-  req.query = { sort: 'updatedAt' };
+  req.query = { ...req.query, sort: 'updatedAt' };
   getAllProducts(req, res, next);
 };
 
