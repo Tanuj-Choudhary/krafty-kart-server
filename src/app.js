@@ -7,6 +7,7 @@ const cors = require('cors');
 const globalErrorHandler = require('./error/errorController');
 const productRouter = require('./products/productRouter');
 const userRouter = require('./users/userRouter');
+const reviewRouter = require('./reviews/reviewRouter');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.use(globalErrorHandler);
 
