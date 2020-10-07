@@ -1,0 +1,37 @@
+[
+  {
+    "firstName": "riyaz",
+    "lastName": "choudhary",
+    "email": "rahulchoudhary@gmail.com",
+    "password": "abc12345",
+    "passwordConfirm": "abc12345"
+  },
+  {
+    "firstName": "raghav",
+    "lastName": "patel",
+    "email": "raghavpatel@gmail.com",
+    "password": "abc12345",
+    "passwordConfirm": "abc12345"
+  },
+  {
+    "firstName": "nisha",
+    "lastName": "mukati",
+    "email": "nishamukati@gmail.com",
+    "password": "abc12345",
+    "passwordConfirm": "abc12345"
+  },
+  {
+    "firstName": "arnav",
+    "lastName": "goswami",
+    "email": "arnavgoswami@gmail.com",
+    "password": "abc12345",
+    "passwordConfirm": "abc12345"
+  },
+  {
+    "firstName": "mayank",
+    "lastName": "hardiya",
+    "email": "mayankhardiya@gmail.com",
+    "password": "abc12345",
+    "passwordConfirm": "abc12345"
+  }
+]
