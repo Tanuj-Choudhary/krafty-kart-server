@@ -1,5 +1,6 @@
 // Third Party Imports
 const express = require('express');
+const { protect, restrictTo } = require('../auth/authController');
 
 // Project Imports
 const {
@@ -12,6 +13,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect, restrictTo('admin'));
 router.route('/').get(getAllReviews).post(createReview);
 router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
 
