@@ -58,9 +58,15 @@ const createOne = (Model) => async (req, res, next) => {
   }
 };
 
-const getOne = (Model) => async (req, res, next) => {
+const getOne = (Model, ...populateOptions) => async (req, res, next) => {
   try {
-    const doc = await Model.findById(req.params.id);
+    const query = Model.findById(req.params.id);
+
+    if (populateOptions) {
+      populateOptions.forEach((populateField) => query.populate(populateField));
+    }
+
+    const doc = await query;
 
     if (!doc) {
       return next(new AppError('No doc found with that id', 401));
