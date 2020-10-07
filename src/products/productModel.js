@@ -42,6 +42,17 @@ const productSchema = mongoose.Schema({
       },
     },
   },
+  avgRating: {
+    type: Number,
+    default: 4,
+    min: 1,
+    max: 5,
+    required: [true, 'Avg rating should be in 1-5'],
+  },
+  nRatings: {
+    type: Number,
+    default: 0,
+  },
   url: {
     type: String,
     required: [true, 'Product image url is required'],
@@ -63,6 +74,15 @@ const productSchema = mongoose.Schema({
   },
   color: String,
 });
+
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'product',
+  localField: '_id',
+});
+
+productSchema.set('toObject', { virtuals: true });
+productSchema.set('toJSON', { virtuals: true });
 
 const Product = mongoose.model('Product', productSchema);
 
