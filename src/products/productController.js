@@ -11,7 +11,7 @@ const {
 const updateProduct = updateOne(Products);
 const deleteProduct = deleteOne(Products);
 const createProduct = createOne(Products);
-const getProduct = getOne(Products);
+const getProduct = getOne(Products, 'reviews');
 const getAllProducts = getAll(Products);
 
 const aliasNewArrivals = (req, res, next) => {
