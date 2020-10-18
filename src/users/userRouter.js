@@ -10,6 +10,7 @@ const {
   createUser,
   getReviewUser,
   updateMe,
+  deleteMe,
 } = require('./userController');
 
 const {
@@ -25,6 +26,7 @@ const {
 const router = express.Router();
 
 router.route('/updateme').patch(protect, updateMe);
+router.route('/deleteme').delete(protect, deleteMe);
 
 router.route('/reviews').get(protect, getReviewUser);
 
