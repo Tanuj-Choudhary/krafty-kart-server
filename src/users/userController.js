@@ -1,4 +1,5 @@
 const User = require('./usersModel');
+const Review = require('../reviews/reviewModel');
 
 const {
   updateOne,
@@ -14,6 +15,25 @@ const createUser = (req, res) => {
   });
 };
 
+const getReviewUser = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const reviews = await Review.find({ user }).populate({
+      path: 'product',
+      select: 'name price',
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        reviews,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const deleteUser = deleteOne(User);
 const getUser = getOne(User);
 const getAllUser = getAll(User);
@@ -27,4 +47,5 @@ module.exports = {
   updateUser,
   getUser,
   getAllUser,
+  getReviewUser,
 };
