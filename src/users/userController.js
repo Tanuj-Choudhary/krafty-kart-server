@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const User = require('./usersModel');
 const Review = require('../reviews/reviewModel');
 
@@ -7,6 +8,56 @@ const {
   getAll,
   getOne,
 } = require('../utils/handlerFactory');
+const AppError = require('../error/appError');
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+
+  Object.keys(obj).forEach((key) => {
+    if (allowedFields.includes(key)) newObj[key] = obj[key];
+  });
+
+  return newObj;
+};
+
+const updateMe = async (req, res, next) => {
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password updates. Please use /updateMyPassword.',
+        400
+      )
+    );
+  }
+  const filteredBody = filterObj(
+    req.body,
+    'firstName',
+    'lastName',
+    'mobileNumber',
+    'pincode'
+  );
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      filteredBody,
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        updatedUser,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const createUser = (req, res) => {
   res.status(500).json({
@@ -48,4 +99,5 @@ module.exports = {
   getUser,
   getAllUser,
   getReviewUser,
+  updateMe,
 };
