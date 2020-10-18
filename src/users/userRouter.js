@@ -9,6 +9,7 @@ const {
   deleteUser,
   createUser,
   getReviewUser,
+  updateMe,
 } = require('./userController');
 
 const {
@@ -22,6 +23,8 @@ const {
 } = require('../auth/authController');
 
 const router = express.Router();
+
+router.route('/updateme').patch(protect, updateMe);
 
 router.route('/reviews').get(protect, getReviewUser);
 
