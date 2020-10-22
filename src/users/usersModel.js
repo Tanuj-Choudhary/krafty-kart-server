@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const Product = require('../products/productModel');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -41,6 +42,15 @@ const userSchema = new mongoose.Schema({
       pincode: Number,
     },
   ],
+  cart: {
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Product,
+        required: [true, 'Product is required'],
+      },
+    ],
+  },
   mobileNumber: String,
   passwordResetToken: { type: String, select: false },
   passwordResetExpiry: { type: Date, select: false },
@@ -57,6 +67,11 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   this.passwordConfirm = undefined;
 
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.populate('cart.products');
   next();
 });
 

@@ -25,8 +25,20 @@ const {
   restrictTo,
   isSignedIn,
 } = require('../auth/authController');
+const {
+  addProductTocart,
+  deleteProductFromCart,
+} = require('../cart/cartController');
+const { createOrderUser } = require('../orders/orderController');
 
 const router = express.Router();
+
+router.route('/orders').post(protect, createOrderUser);
+
+router
+  .route('/cart/products/:id')
+  .post(protect, addProductTocart)
+  .delete(protect, deleteProductFromCart);
 
 router
   .route('/address/:id')
