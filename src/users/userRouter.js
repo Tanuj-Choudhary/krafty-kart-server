@@ -11,6 +11,9 @@ const {
   getReviewUser,
   updateMe,
   deleteMe,
+  addAddress,
+  deleteAddress,
+  updateAddress,
 } = require('./userController');
 
 const {
@@ -24,6 +27,13 @@ const {
 } = require('../auth/authController');
 
 const router = express.Router();
+
+router
+  .route('/address/:id')
+  .delete(protect, deleteAddress)
+  .patch(protect, updateAddress);
+
+router.route('/address').post(protect, addAddress);
 
 router.route('/updateme').patch(protect, updateMe);
 router.route('/deleteme').delete(protect, deleteMe);

@@ -35,8 +35,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
-  address: String,
-  pincode: String,
+  addresses: [
+    {
+      address: String,
+      pincode: Number,
+    },
+  ],
   mobileNumber: String,
   passwordResetToken: { type: String, select: false },
   passwordResetExpiry: { type: Date, select: false },

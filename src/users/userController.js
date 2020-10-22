@@ -72,6 +72,74 @@ const deleteMe = async (req, res, next) => {
   }
 };
 
+const updateAddress = async (req, res, next) => {
+  if (!req.body || !req.body.address || !req.body.pincode) {
+    return next(new AppError('Please provide address', 400));
+  }
+
+  const address = req.body;
+
+  try {
+    await User.update(
+      { _id: req.user._id, 'addresses._id': req.params.id },
+      {
+        $set: {
+          'addresses.$.address': address.address,
+          'addresses.$.pincode': address.pincode,
+        },
+      }
+    );
+
+    res.status(200).json({
+      status: 'success',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const addAddress = async (req, res, next) => {
+  if (!req.body || !req.body.address || !req.body.pincode) {
+    return next(new AppError('Please provide address', 400));
+  }
+
+  const address = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $push: { addresses: address },
+      },
+      { new: true, userFindAndModify: false, runValidators: true }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteAddress = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { addresses: { _id: req.params.id } } },
+      { useFindAndModify: false, new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -114,4 +182,7 @@ module.exports = {
   getReviewUser,
   updateMe,
   deleteMe,
+  addAddress,
+  deleteAddress,
+  updateAddress,
 };
