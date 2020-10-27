@@ -14,7 +14,10 @@ const app = require('./src/app');
 const PORT = process.env.PORT || 8000;
 
 // LOCAL DATABASE
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE.replace(
+  '<password>',
+  process.env.DATABASE_PASSWORD
+);
 
 // Connect to database
 mongoose
