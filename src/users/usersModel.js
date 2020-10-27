@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
   },
   addresses: [
     {
+      type: {
+        type: String,
+        enum: ['home', 'work'],
+      },
+      name: String,
+      mobileNumber: Number,
       address: String,
       pincode: Number,
     },

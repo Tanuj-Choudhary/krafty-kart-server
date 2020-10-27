@@ -11,6 +11,21 @@ const Order = require('./orderModel');
 const User = require('../users/usersModel');
 const AppError = require('../error/appError');
 
+const getMyOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find({ user: req.user._id });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        orders,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const createOrderUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
@@ -24,6 +39,7 @@ const createOrderUser = async (req, res, next) => {
     const order = await Order.create({
       cart,
       user: req.user._id,
+      address: req.body,
     });
 
     res.status(200).json({
@@ -48,4 +64,5 @@ module.exports = {
   deleteOrder,
   updateOrder,
   createOrderUser,
+  getMyOrders,
 };

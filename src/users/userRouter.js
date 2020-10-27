@@ -29,11 +29,14 @@ const {
   addProductTocart,
   deleteProductFromCart,
 } = require('../cart/cartController');
-const { createOrderUser } = require('../orders/orderController');
+const { createOrderUser, getMyOrders } = require('../orders/orderController');
 
 const router = express.Router();
 
-router.route('/orders').post(protect, createOrderUser);
+router
+  .route('/orders')
+  .post(protect, createOrderUser)
+  .get(protect, getMyOrders);
 
 router
   .route('/cart/products/:id')

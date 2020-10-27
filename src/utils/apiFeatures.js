@@ -20,6 +20,18 @@ class APIFeatures {
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     queryObj = JSON.parse(queryStr);
 
+    /**
+     * Gotcha for  products
+     * request = { sizes : ['S','M'] }
+     * requestModified = { sizes: { $all : ['S','M']} }
+     */
+    const { sizes } = queryObj;
+
+    if (sizes) {
+      delete queryObj.sizes;
+      queryObj = { ...queryObj, sizes: { $all: sizes } };
+    }
+
     this.query = this.query.find(queryObj);
 
     return this;

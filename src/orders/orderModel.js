@@ -15,6 +15,17 @@ const orderSchema = mongoose.Schema({
     type: String,
     default: Date.now(),
   },
+  address: {
+    type: {
+      type: String,
+      enum: ['home', 'work'],
+      required: [true, 'Address type is required'],
+    },
+    name: String,
+    mobileNumber: Number,
+    address: String,
+    pincode: Number,
+  },
 });
 
 const Order = mongoose.model('Order', orderSchema);
