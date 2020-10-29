@@ -4,7 +4,10 @@ const fs = require('fs');
 const Users = require('../../users/usersModel');
 
 // LOCAL DATABASE
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE.replace(
+  '<password>',
+  process.env.DATABASE_PASSWORD
+);
 
 mongoose
   .connect(DB, {
