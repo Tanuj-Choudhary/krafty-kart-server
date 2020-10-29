@@ -9,9 +9,9 @@ const {
 } = require('./utils');
 
 const errorController = (err, req, res, next) => {
-  if (process.env.NODE_ENV === 'DEVELOPMENT') {
+  if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
-  } else if (process.env.NODE_ENV === 'PRODUCTION') {
+  } else if (process.env.NODE_ENV === 'production') {
     // Extract error to new object
     let error = { ...err };
     error.name = err.name;
