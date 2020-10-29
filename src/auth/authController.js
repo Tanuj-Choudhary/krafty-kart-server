@@ -27,7 +27,7 @@ const signup = async (req, res, next) => {
 
     newUser.password = undefined;
 
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       data: {
         newUser,
@@ -112,13 +112,13 @@ const forgotPassword = async (req, res, next) => {
   const { email } = req.body;
 
   if (!email) {
-    return next(new AppError('Please provide email', 401));
+    return next(new AppError('Please provide email', 400));
   }
   try {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      return next(new AppError('No user exist with that email', 401));
+      return next(new AppError('No user exist with that email', 400));
     }
 
     const token = await user.generatePasswordResetToken();
@@ -157,7 +157,7 @@ const resetPassword = async (req, res, next) => {
 
   if (passwordConfirm !== password) {
     return next(
-      new AppError('Password and password confirm does not match', 401)
+      new AppError('Password and password confirm does not match', 400)
     );
   }
 
@@ -167,11 +167,11 @@ const resetPassword = async (req, res, next) => {
     );
 
     if (!user) {
-      return next(new AppError('No user exists with that email', 401));
+      return next(new AppError('No user exists with that email', 400));
     }
 
     if (!user.verifyPasswordResetToken(passwordResetToken)) {
-      return next(new AppError('Password reset token is not valid', 401));
+      return next(new AppError('Password reset token is not valid', 400));
     }
 
     user.password = password;
@@ -206,7 +206,7 @@ const restrictTo = (...roles) => (req, res, next) => {
     return next();
   }
 
-  next(new AppError('You are not authorized to access', 401));
+  next(new AppError('You are not authorized to access', 403));
 };
 
 module.exports = {

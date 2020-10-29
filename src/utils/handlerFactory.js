@@ -10,7 +10,7 @@ const updateOne = (Model) => async (req, res, next) => {
     });
 
     if (!doc) {
-      return next(new AppError('No doc found with that ID', 401));
+      return next(new AppError('No doc found with that ID', 400));
     }
 
     res.status(200).json({
@@ -31,7 +31,7 @@ const deleteOne = (Model) => async (req, res, next) => {
     });
 
     if (!doc) {
-      return next(new AppError('No doc found with that ID', 401));
+      return next(new AppError('No doc found with that ID', 400));
     }
 
     res.status(200).json({
@@ -69,7 +69,7 @@ const getOne = (Model, ...populateOptions) => async (req, res, next) => {
     const doc = await query;
 
     if (!doc) {
-      return next(new AppError('No doc found with that id', 401));
+      return next(new AppError('No doc found with that id', 400));
     }
 
     res.status(200).json({
